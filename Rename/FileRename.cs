@@ -6,13 +6,13 @@ namespace Rename {
 		private string _newSize;
 
 		public DateTime   mod { get; set; }
-		public string oldSize { get; set; }
 		public string   fapth { get; set; }
 		public string   folds { get; set; }
 		public string   extra { get; set; }
 		public bool    isTaut { get; set; }
 		public bool   isThick { get; set; }
         public bool   hasTwin { get; set; }
+		public string oldSize { get; set; }
 		public string newSize {
 			get { return _newSize; }
 			set
