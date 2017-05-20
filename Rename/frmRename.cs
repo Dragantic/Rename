@@ -36,7 +36,7 @@ namespace Rename {
 					Regex taut = new Regex("duplicates *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex moar = new Regex("subfolders *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex fldr = new Regex("foldername *: *(?<pref>.+)", RegexOptions.IgnoreCase);
-					Regex swap = new Regex("nameswap *: *(?<pref>.+)", RegexOptions.IgnoreCase);
+					Regex swap = new Regex("nameswappr *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex done = new Regex("-{3,}");
 					if (before.IsMatch(line))
 					{	chkSearch.Checked = true;
