@@ -46,15 +46,17 @@
 			this.chkFolderName = new System.Windows.Forms.CheckBox();
 			this.pbar = new System.Windows.Forms.ProgressBar();
 			this.txtPath = new System.Windows.Forms.TextBox();
-			this.btnDelete = new System.Windows.Forms.Button();
+			this.btnRecycle = new System.Windows.Forms.Button();
 			this.btnNames = new System.Windows.Forms.Button();
+			this.chkExtChecker = new System.Windows.Forms.CheckBox();
+			this.btnPath = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// chkSubFolders
 			// 
 			this.chkSubFolders.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.chkSubFolders.AutoSize = true;
-			this.chkSubFolders.Location = new System.Drawing.Point(490, 363);
+			this.chkSubFolders.Location = new System.Drawing.Point(490, 364);
 			this.chkSubFolders.Name = "chkSubFolders";
 			this.chkSubFolders.Size = new System.Drawing.Size(82, 17);
 			this.chkSubFolders.TabIndex = 9;
@@ -82,7 +84,7 @@
 			this.lsvBlimps.FullRowSelect = true;
 			this.lsvBlimps.Location = new System.Drawing.Point(13, 29);
 			this.lsvBlimps.Name = "lsvBlimps";
-			this.lsvBlimps.Size = new System.Drawing.Size(559, 312);
+			this.lsvBlimps.Size = new System.Drawing.Size(559, 313);
 			this.lsvBlimps.SmallImageList = this.rowHeight;
 			this.lsvBlimps.Sorting = System.Windows.Forms.SortOrder.Ascending;
 			this.lsvBlimps.TabIndex = 0;
@@ -111,18 +113,18 @@
 			// btnRescan
 			// 
 			this.btnRescan.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.btnRescan.Location = new System.Drawing.Point(226, 362);
+			this.btnRescan.Location = new System.Drawing.Point(226, 363);
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(75, 23);
 			this.btnRescan.TabIndex = 1;
 			this.btnRescan.Text = "Rescan";
 			this.btnRescan.UseVisualStyleBackColor = true;
-			this.btnRescan.Click += new System.EventHandler(this.Rescan);
+			this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
 			// 
 			// btnCommit
 			// 
 			this.btnCommit.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.btnCommit.Location = new System.Drawing.Point(307, 362);
+			this.btnCommit.Location = new System.Drawing.Point(307, 363);
 			this.btnCommit.Name = "btnCommit";
 			this.btnCommit.Size = new System.Drawing.Size(75, 23);
 			this.btnCommit.TabIndex = 2;
@@ -134,7 +136,7 @@
 			// 
 			this.btnRemove.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
 			this.btnRemove.Enabled = false;
-			this.btnRemove.Location = new System.Drawing.Point(226, 391);
+			this.btnRemove.Location = new System.Drawing.Point(226, 392);
 			this.btnRemove.Name = "btnRemove";
 			this.btnRemove.Size = new System.Drawing.Size(75, 23);
 			this.btnRemove.TabIndex = 3;
@@ -146,7 +148,7 @@
 			// 
 			this.txtAfter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.txtAfter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtAfter.Location = new System.Drawing.Point(93, 391);
+			this.txtAfter.Location = new System.Drawing.Point(93, 392);
 			this.txtAfter.Name = "txtAfter";
 			this.txtAfter.Size = new System.Drawing.Size(127, 23);
 			this.txtAfter.TabIndex = 6;
@@ -157,7 +159,7 @@
 			// 
 			this.lblSyntax.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblSyntax.AutoSize = true;
-			this.lblSyntax.Location = new System.Drawing.Point(15, 395);
+			this.lblSyntax.Location = new System.Drawing.Point(15, 396);
 			this.lblSyntax.Name = "lblSyntax";
 			this.lblSyntax.Size = new System.Drawing.Size(72, 13);
 			this.lblSyntax.TabIndex = 17;
@@ -167,7 +169,7 @@
 			// 
 			this.chkDuplicates.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.chkDuplicates.AutoSize = true;
-			this.chkDuplicates.Location = new System.Drawing.Point(395, 363);
+			this.chkDuplicates.Location = new System.Drawing.Point(395, 364);
 			this.chkDuplicates.Name = "chkDuplicates";
 			this.chkDuplicates.Size = new System.Drawing.Size(76, 17);
 			this.chkDuplicates.TabIndex = 8;
@@ -178,7 +180,7 @@
 			// 
 			this.lblSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblSearch.AutoSize = true;
-			this.lblSearch.Location = new System.Drawing.Point(30, 366);
+			this.lblSearch.Location = new System.Drawing.Point(30, 367);
 			this.lblSearch.Name = "lblSearch";
 			this.lblSearch.Size = new System.Drawing.Size(59, 13);
 			this.lblSearch.TabIndex = 16;
@@ -190,7 +192,7 @@
 			this.txtBefore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.txtBefore.Enabled = false;
 			this.txtBefore.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtBefore.Location = new System.Drawing.Point(93, 362);
+			this.txtBefore.Location = new System.Drawing.Point(93, 363);
 			this.txtBefore.Name = "txtBefore";
 			this.txtBefore.Size = new System.Drawing.Size(127, 23);
 			this.txtBefore.TabIndex = 5;
@@ -201,7 +203,7 @@
 			// 
 			this.chkSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.chkSearch.AutoSize = true;
-			this.chkSearch.Location = new System.Drawing.Point(13, 366);
+			this.chkSearch.Location = new System.Drawing.Point(13, 367);
 			this.chkSearch.Name = "chkSearch";
 			this.chkSearch.Size = new System.Drawing.Size(15, 14);
 			this.chkSearch.TabIndex = 7;
@@ -212,7 +214,7 @@
 			// 
 			this.chkNameSwap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.chkNameSwap.AutoSize = true;
-			this.chkNameSwap.Location = new System.Drawing.Point(395, 386);
+			this.chkNameSwap.Location = new System.Drawing.Point(395, 387);
 			this.chkNameSwap.Name = "chkNameSwap";
 			this.chkNameSwap.Size = new System.Drawing.Size(84, 17);
 			this.chkNameSwap.TabIndex = 10;
@@ -224,7 +226,7 @@
 			// 
 			this.chkFolderName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.chkFolderName.AutoSize = true;
-			this.chkFolderName.Location = new System.Drawing.Point(490, 386);
+			this.chkFolderName.Location = new System.Drawing.Point(490, 387);
 			this.chkFolderName.Name = "chkFolderName";
 			this.chkFolderName.Size = new System.Drawing.Size(86, 17);
 			this.chkFolderName.TabIndex = 11;
@@ -235,7 +237,7 @@
 			// 
 			this.pbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.pbar.Location = new System.Drawing.Point(13, 345);
+			this.pbar.Location = new System.Drawing.Point(13, 346);
 			this.pbar.Name = "pbar";
 			this.pbar.Size = new System.Drawing.Size(559, 12);
 			this.pbar.Step = 1;
@@ -246,28 +248,29 @@
 			this.txtPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtPath.BackColor = System.Drawing.SystemColors.Menu;
-			this.txtPath.Location = new System.Drawing.Point(106, 3);
+			this.txtPath.Enabled = false;
+			this.txtPath.Location = new System.Drawing.Point(167, 3);
 			this.txtPath.Name = "txtPath";
 			this.txtPath.ReadOnly = true;
-			this.txtPath.Size = new System.Drawing.Size(466, 20);
+			this.txtPath.Size = new System.Drawing.Size(405, 20);
 			this.txtPath.TabIndex = 13;
 			// 
-			// btnDelete
+			// btnRecycle
 			// 
-			this.btnDelete.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-			this.btnDelete.Enabled = false;
-			this.btnDelete.Location = new System.Drawing.Point(307, 391);
-			this.btnDelete.Name = "btnDelete";
-			this.btnDelete.Size = new System.Drawing.Size(75, 23);
-			this.btnDelete.TabIndex = 4;
-			this.btnDelete.Text = "Delete";
-			this.btnDelete.UseVisualStyleBackColor = true;
-			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+			this.btnRecycle.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+			this.btnRecycle.Enabled = false;
+			this.btnRecycle.Location = new System.Drawing.Point(307, 392);
+			this.btnRecycle.Name = "btnRecycle";
+			this.btnRecycle.Size = new System.Drawing.Size(75, 23);
+			this.btnRecycle.TabIndex = 4;
+			this.btnRecycle.Text = "Recycle";
+			this.btnRecycle.UseVisualStyleBackColor = true;
+			this.btnRecycle.Click += new System.EventHandler(this.btnRecycle_Click);
 			// 
 			// btnNames
 			// 
 			this.btnNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnNames.Location = new System.Drawing.Point(394, 404);
+			this.btnNames.Location = new System.Drawing.Point(394, 405);
 			this.btnNames.Name = "btnNames";
 			this.btnNames.Size = new System.Drawing.Size(24, 24);
 			this.btnNames.TabIndex = 12;
@@ -275,13 +278,36 @@
 			this.btnNames.UseVisualStyleBackColor = true;
 			this.btnNames.Click += new System.EventHandler(this.btnNames_Click);
 			// 
+			// chkExtChecker
+			// 
+			this.chkExtChecker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.chkExtChecker.AutoSize = true;
+			this.chkExtChecker.Location = new System.Drawing.Point(490, 410);
+			this.chkExtChecker.Name = "chkExtChecker";
+			this.chkExtChecker.Size = new System.Drawing.Size(87, 17);
+			this.chkExtChecker.TabIndex = 18;
+			this.chkExtChecker.Text = "Ext. Checker";
+			this.chkExtChecker.UseVisualStyleBackColor = true;
+			// 
+			// btnPath
+			// 
+			this.btnPath.Location = new System.Drawing.Point(137, 1);
+			this.btnPath.Name = "btnPath";
+			this.btnPath.Size = new System.Drawing.Size(24, 24);
+			this.btnPath.TabIndex = 19;
+			this.btnPath.Text = "...";
+			this.btnPath.UseVisualStyleBackColor = true;
+			this.btnPath.Click += new System.EventHandler(this.btnPath_Click);
+			// 
 			// frmRename
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(584, 440);
+			this.ClientSize = new System.Drawing.Size(584, 441);
+			this.Controls.Add(this.btnPath);
+			this.Controls.Add(this.chkExtChecker);
 			this.Controls.Add(this.btnNames);
-			this.Controls.Add(this.btnDelete);
+			this.Controls.Add(this.btnRecycle);
 			this.Controls.Add(this.txtPath);
 			this.Controls.Add(this.pbar);
 			this.Controls.Add(this.chkFolderName);
@@ -303,7 +329,7 @@
 			this.Text = "Rename";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmRename_FormClosing);
 			this.Load += new System.EventHandler(this.frmRename_Load);
-			this.Shown += new System.EventHandler(this.Rescan);
+			this.Shown += new System.EventHandler(this.frmRename_Shown);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -330,8 +356,10 @@
         private System.Windows.Forms.CheckBox chkFolderName;
         private System.Windows.Forms.ProgressBar pbar;
         private System.Windows.Forms.TextBox txtPath;
-        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnRecycle;
         private System.Windows.Forms.Button btnNames;
-    }
+		private System.Windows.Forms.CheckBox chkExtChecker;
+		private System.Windows.Forms.Button btnPath;
+	}
 }
 

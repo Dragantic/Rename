@@ -16,16 +16,19 @@ namespace Rename {
 		}
 
 		string pimp = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
-					+ @"\.rename";
+					+ @"\Documents\.rename";
 		DirectoryInfo bitchz = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-		List<FileInfo> hoez;
+		frmNames fNames = new frmNames();
+		FolderSelectDialog fsd = new FolderSelectDialog();
 		List<FileRename> fatties;
 		List<string[]> gainers;
-		frmNames fNames;
+
 
 		private void frmRename_Load(object sender, EventArgs e) {
+			txtPath.Text = fsd.InitialDirectory = bitchz.FullName;
 			Location = Settings.Default.Location;
-			fNames = new frmNames();
+			Size = Settings.Default.Size;
+
 			if (File.Exists(pimp))
 			{ using (StreamReader sr = new StreamReader(pimp))
 			  { string line, toggle;
@@ -37,7 +40,10 @@ namespace Rename {
 					Regex moar = new Regex("subfolders *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex fldr = new Regex("foldername *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex swap = new Regex("nameswappr *: *(?<pref>.+)", RegexOptions.IgnoreCase);
+					Regex echk = new Regex("extchecker *: *(?<pref>.+)", RegexOptions.IgnoreCase);
+					Regex auto = new Regex("auto-close *: *(?<pref>.+)", RegexOptions.IgnoreCase);
 					Regex done = new Regex("-{3,}");
+					
 					if (before.IsMatch(line))
 					{	chkSearch.Checked = true;
 						mate = before.Match(line);
@@ -67,18 +73,38 @@ namespace Rename {
 						toggle = mate.Groups["pref"].ToString().Trim().ToLower();
 						chkNameSwap.Checked = toggle.In("on", "yes");
 						continue;   }
+					if (echk.IsMatch(line))
+					{	mate = echk.Match(line);
+						toggle = mate.Groups["pref"].ToString().Trim().ToLower();
+						chkExtChecker.Checked = toggle.In("on", "yes");
+						continue;   }
+					if (auto.IsMatch(line))
+					{	mate = auto.Match(line);
+						toggle = mate.Groups["pref"].ToString().Trim().ToLower();
+						isAuto = toggle.In("on", "yes");
+						continue;   }
 					if (done.IsMatch(line)) break;   } } }
+		}
+
+		private void frmRename_Shown(object sender, EventArgs e) {
+			Fill();
+		}
+
+		private void btnRescan_Click(object sender, EventArgs e) {
+			Fill();
+		}
+
+		private void PressEnter(object sender, KeyPressEventArgs e) {
+			if (e.KeyChar == (char)Keys.Return) { Fill(); e.Handled=true; }
 		}
 
 		private void frmRename_FormClosing(object sender, FormClosingEventArgs e) {
 			Settings.Default.Location = Location;
+			Settings.Default.Size = Size;
 			Settings.Default.Save();
 		}
 
-		private void chkSearch_CheckedChanged(object sender, EventArgs e) {
-			txtBefore.Enabled = chkSearch.Checked;
-		}
-
+		bool isAuto;
 		private void btnCommit_Click(object sender, EventArgs e) {
 			DialogResult result = MessageBox.Show
 				("	Rename " + fatties.Count + " file"
@@ -86,22 +112,26 @@ namespace Rename {
 				"Rename", MessageBoxButtons.OKCancel);
 			if (result.Equals(DialogResult.OK))
 			{	foreach (FileRename creak in fatties) creak.Boom();
-				Application.Exit();   }
+				if (isAuto)
+					Application.Exit();
+				else
+				{	btnCommit.Enabled = btnRemove.Enabled = btnRecycle.Enabled = false;
+					lsvBlimps.Items.Clear();   }   }
 		}
 
 		private void btnRemove_Click(object sender, EventArgs e) {
 			foreach (ListViewItem tightClothes in lsvBlimps.SelectedItems)
-			{	fatties.Remove(fatties.Find
-					(body => body.newSize == tightClothes.SubItems[2].Text));
+			{	fatties.Remove(fatties.Find(body =>
+					body.newSize+body.extra == tightClothes.SubItems[2].Text));
 				lsvBlimps.Items.Remove(tightClothes);   }
 			lblMates.Text = nMates();
 			if (fatties.Count == 0) btnCommit.Enabled = false;
 		}
 
-		private void btnDelete_Click(object sender, EventArgs e) {
+		private void btnRecycle_Click(object sender, EventArgs e) {
 			foreach (ListViewItem thin in lsvBlimps.SelectedItems)
-			{	FileRename skinny = fatties.Find
-					(body => body.newSize == thin.SubItems[2].Text);
+			{	FileRename skinny = fatties.Find(body =>
+					body.newSize+body.extra == thin.SubItems[2].Text);
 				try
 				{	FileSystem.DeleteFile(skinny.fapth + skinny.oldSize,
 						UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);   }
@@ -112,25 +142,43 @@ namespace Rename {
 			if (fatties.Count == 0) btnCommit.Enabled = false;
 		}
 
-		private void PressEnter(object sender, KeyPressEventArgs e) {
-			if (e.KeyChar == (char)Keys.Return) { Fill(); e.Handled=true; }
+		private void btnNames_Click(object sender, EventArgs e) {
+			if (!fNames.IsDisposed)
+			{	fNames.Show();
+				fNames.Focus();   }
+			else
+			{	fNames = new frmNames();
+				fNames.Show();   }
 		}
 
-		private void Rescan(object sender, EventArgs e) {
-			Fill();
+		private void btnPath_Click(object sender, EventArgs e) {
+			if (fsd.ShowDialog(IntPtr.Zero))
+			{	txtPath.Text = fsd.FileName + @"\";
+				bitchz = new DirectoryInfo(txtPath.Text);
+				fsd.InitialDirectory = bitchz.Parent.FullName;
+				Fill();   }
 		}
+
+		private void chkNameSwap_CheckedChanged(object sender, EventArgs e) {
+			btnNames.Enabled = chkNameSwap.Checked;
+		}
+
+		private void chkSearch_CheckedChanged(object sender, EventArgs e) {
+			txtBefore.Enabled = chkSearch.Checked;
+		}
+
 
 		Regex fillFA, fillDA;
 		string puddinFA = @"^(?:\d{10}\..+)*(?<tag>\d{10})[\._-]"
 						+ @"(?<artist>[\.\~a-zA-Z0-9-]+)_[_-]*"
 						+ @"(?<title>([\._-]*(?!png$|jp(e)?g$|gif$|swf$)"
-						+ @"([\(\)\[\]\{\}a-zA-Z0-9+!,]|[^\x00-\x80]))+)";
+						+ @"([\(\)\[\]\{\}a-zA-Z0-9+%!,]|[^\x00-\x80]))+)";
 
 		string puddinDA = @"^_*(?<title>([_-]*[\(\)a-zA-Z0-9+!])+)"
 						+ @"_*_by_(?<artist>([_-]*[\(\)a-zA-Z0-9+!])+)"
-						+ @"-(?<tag>[a-zA-Z0-9]{7})";
+						+ @"-(?<tag>[a-zA-Z0-9]{7})$";
 
-		public void Ogle() {
+		void Fill() {
 			if (chkSearch.Checked)
 			{	Regex rgx = new Regex("[\\.+]");
 				string search = "^" + rgx.Replace(txtBefore.Text, "\\$&");
@@ -162,40 +210,45 @@ namespace Rename {
 					if (names.Length>1) gainers.Add(names);   } } }
 
 			pbar.Value = 0;
-			btnRescan.Enabled = (btnRemove.Enabled = (btnDelete.Enabled = false));
+			btnRescan.Enabled = btnRemove.Enabled = btnRecycle.Enabled = false;
 			lsvBlimps.Items.Clear();
-			hoez = bitchz.GetFiles().ToList();
-			if (chkSubFolders.Checked)
-			{	List<DirectoryInfo> moar = bitchz.GetDirectories().ToList();
-				foreach (DirectoryInfo bigger in moar)
-					hoez.AddRange(bigger.GetFiles().ToList());   }
-			pbar.Maximum = hoez.Count;
-		}
 
-		public void Fill() {
-			Ogle();
-			fatties = Bloated(hoez);
+			if (chkSubFolders.Checked)
+			{	Bitch moar = new Bitch(bitchz);
+				pbar.Maximum = moar.total;
+				fatties.Clear();
+				foreach (var hoe in moar.fam) fatties.AddRange(Bloated(hoe));   }
+			else
+			{	List<FileInfo> hoez = bitchz.GetFiles().ToList();
+				pbar.Maximum = hoez.Count;
+				fatties = Bloated(hoez);   }			
+
 			foreach (FileRename mate in fatties)
 			{	ListViewItem mass = new ListViewItem(mate.mod.ToString());
 				mass.SubItems.AddRange(new string[]
-				{	mate.oldSize, mate.newSize, mate.isTaut.ToString(),
-					mate.isThick.ToString(), mate.hasTwin.ToString()   });
+				{   mate.oldSize, mate.newSize+mate.extra,
+					mate.isTaut.ToString(), mate.hasTwin.ToString()   });
+
+				if (mate.hasTwin) // has a (1) in the name
+					mass.BackColor = Color.LightSkyBlue;
+
+				else if (mate.isTaut) // newSize already exists
+					mass.BackColor = Color.LightSalmon;
+
+				else if (mate.isThick) // artist name changed
+					mass.BackColor = Color.GreenYellow;
+
+				else if (mate.isTrap) // extension changed
+					mass.BackColor = Color.Gold;
+
 				lsvBlimps.Items.Add(mass);   }
 
 			if (fatties.Count > 0)
-				colRename.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+			{	colRename.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+				colRename.Width += 10;   }
 			
 			foreach (ListViewItem mass in lsvBlimps.Items)
-			{	mass.SubItems[1].Text += "\n" + mass.SubItems[2].Text;
-				if (mass.SubItems[3].Text == "True")
-				{	mass.SubItems[1].Text += "\nDUPLICATE";
-					mass.BackColor = Color.LightSalmon;   }
-
-				if (mass.SubItems[4].Text == "True")
-					mass.BackColor = Color.LightYellow;
-
-				if (mass.SubItems[5].Text == "True")
-					mass.BackColor = Color.Lavender;   }
+				mass.SubItems[1].Text += "\n" + mass.SubItems[2].Text;
 
 			lsvBlimps.Sorting = SortOrder.Ascending;
 			datAss = 00;
@@ -207,17 +260,17 @@ namespace Rename {
 		}
 
 		int datAss;
-		public void ShakeDat() {
+		void ShakeDat() {
 			lsvBlimps.ListViewItemSorter = new ListViewItemComparer(datAss, lsvBlimps.Sorting);
 			lsvBlimps.Sort();
 		}
 
-		public string nMates() {
+		string nMates() {
 			return (fatties.Count > 0 ? fatties.Count.ToString() : "no")
 				 + " match" + (fatties.Count == 1 ? "" : "es");
 		}
 
-		public List<FileRename> Bloated(List<FileInfo> ass) {
+		List<FileRename> Bloated(List<FileInfo> ass) {
 			List<FileRename> blimps = new List<FileRename>();
 			foreach (FileInfo pump in ass)
 			{	FileRename blimp = new FileRename(pump);
@@ -254,12 +307,18 @@ namespace Rename {
 
 				if (newSize != "BOOM" && oldSize != "Rename")
 				{	blimp.newSize = newSize;
-					if (chkDuplicates.Checked || !blimp.isTaut) blimps.Add(blimp);   }
+					if (chkDuplicates.Checked || !blimp.isTaut)
+					{	if (chkExtChecker.Checked)
+						{	string head = getHeader(blimp);
+							if (blimp.extra != head)
+							{	blimp.extra = head;
+								blimp.isTrap = true;   }   }
+						blimps.Add(blimp);   }   }
 				pbar.PerformStep();   }
 			return blimps;
 		}
 
-		public string Full(Match figured) {
+		string Full(Match figured) {
 			string tits = figured.Groups["tag"].ToString(),
 				    gut = figured.Groups["title"].ToString(),
 				   butt = figured.Groups["artist"].ToString(),
@@ -277,6 +336,21 @@ namespace Rename {
 			return zaft;
 		}
 
+		static string getHeader(FileRename blimp) {
+			try
+			{	string full = blimp.fapth + blimp.oldSize;
+				bool matchJPG, matchPNG;
+				using (BinaryReader br = new BinaryReader(File.Open(full, FileMode.Open)))
+				{	UInt16 soi = br.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
+					UInt16 marker = br.ReadUInt16(); // JFIF marker (FFE0) or EXIF marker(FF01)
+					matchJPG = (soi == 0xd8ff && (marker & 0xe0ff) == 0xe0ff);
+					matchPNG = (soi == 0x5089 && marker == 0x474e);   }
+				if (matchJPG) return ".jpg";
+				else if (matchPNG) return ".png";
+				else return blimp.extra;   }
+			catch { return blimp.extra; }
+		}
+
 		bool handled;
 		private void lsvBlimps_SelectedIndexChanged(object sender, EventArgs e) {
 			if (!handled)
@@ -291,9 +365,9 @@ namespace Rename {
 			bool canRemove = (lsvBlimps.SelectedItems.Count > 0);
 			btnRemove.Enabled = canRemove;
 			foreach (ListViewItem bitch in lsvBlimps.SelectedItems)
-				if (bitch.SubItems[3].Text == "False" && bitch.SubItems[5].Text == "False")
+				if (bitch.SubItems[3].Text == "False" && bitch.SubItems[4].Text == "False")
 				{	canRemove = false; break;   }
-			btnDelete.Enabled = canRemove;
+			btnRecycle.Enabled = canRemove;
 		}
 
 		private void lsvBlimps_ColumnClick(object sender, ColumnClickEventArgs e) {
@@ -306,23 +380,10 @@ namespace Rename {
 
 		private void lsvBlimps_DoubleClick(object sender, EventArgs e) {
 			if (lsvBlimps.SelectedItems.Count == 1)
-			{	FileRename pig = fatties.Find
-					(body => body.newSize == lsvBlimps.SelectedItems[0].SubItems[2].Text);
+			{	FileRename pig = fatties.Find (body =>
+					body.newSize+body.extra == lsvBlimps.SelectedItems[0].SubItems[2].Text);
 				if (File.Exists(pig.fapth + pig.oldSize))
-					OpenFolderAndSelectFile(pig.fapth + pig.oldSize);   }
-		}
-
-		private void btnNames_Click(object sender, EventArgs e) {
-			if (!fNames.IsDisposed)
-			{	fNames.Show();
-				fNames.Focus();   }
-			else
-			{	fNames = new frmNames();
-				fNames.Show();   }
-		}
-
-		private void chkNameSwap_CheckedChanged(object sender, EventArgs e) {
-			btnNames.Enabled = chkNameSwap.Checked;
+					try { OpenFolderAndSelectFile(pig.fapth + pig.oldSize); } catch {}   }
 		}
 
 		public void OpenFolderAndSelectFile(string filePath) {

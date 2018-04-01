@@ -14,10 +14,11 @@ namespace Rename {
 
 		BindingList<NameSwap> bList;
 		string pimp = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
-					+ @"\.rename";
+					+ @"\Documents\.rename";
 
 		private void frmNames_Load(object sender, System.EventArgs e) {
 			Location = Settings.Default.NameLocation;
+			Size = Settings.Default.NameSize;
 			bList = new BindingList<NameSwap>();
 
 			if (File.Exists(pimp))
@@ -39,6 +40,7 @@ namespace Rename {
 
 		private void frmNames_FormClosing(object sender, FormClosingEventArgs e) {
 			Settings.Default.NameLocation = Location;
+			Settings.Default.NameSize = Size;
 			Settings.Default.Save();
 		}
 

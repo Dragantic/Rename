@@ -8,5 +8,11 @@
     <Setting Name="NameLocation" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">17, 17</Value>
     </Setting>
+    <Setting Name="Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">600, 480</Value>
+    </Setting>
+    <Setting Name="NameSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">315, 365</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

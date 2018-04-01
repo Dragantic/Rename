@@ -12,16 +12,17 @@ namespace Rename {
 		public bool    isTaut { get; set; }
 		public bool   isThick { get; set; }
         public bool   hasTwin { get; set; }
+		public bool    isTrap { get; set; }
 		public string oldSize { get; set; }
 		public string newSize {
 			get { return _newSize; }
 			set
 			{	if ((isTaut = (File.Exists(fapth + value + extra))))
-				{	int groan = 1;
+				{	int groan = 0;
 					do groan++;
 					while (File.Exists(fapth + value + "(" + groan + ")" + extra));
-					_newSize = value + "(" + groan + ")" + extra;   }
-				else _newSize = value + extra;   }
+					_newSize = value + "(" + groan + ")";   }
+				else _newSize = value;   }
 		}
 
 		public FileRename (FileInfo info) {
@@ -33,8 +34,7 @@ namespace Rename {
 		}
 
 		public void Boom() {
-			try { File.Move(fapth + oldSize, fapth + _newSize); }
-			catch (Exception) { }
+			try { File.Move(fapth + oldSize, fapth + _newSize + extra); } catch {}
 		}
 	}
 }
