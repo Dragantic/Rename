@@ -7,14 +7,14 @@ namespace Rename {
 	class Bitch {
 		DirectoryInfo face;
 		List<FileInfo> goods;
-		List<Bitch> kids;
+		List<Bitch> kids = new List<Bitch>();
 		Bitch parent;
 
 		static int _total=0;
 		public int total { get { return _total; } }
 
-		static List<List<FileInfo>> _fam = new List<List<FileInfo>>();
-		public List<List<FileInfo>> fam { get { return _fam; } }
+		static List<FileInfo> _fam = new List<FileInfo>();
+		public List<FileInfo> fam { get { return _fam; } }
 
 		public Bitch(DirectoryInfo cute) {
 			init(cute);
@@ -31,12 +31,11 @@ namespace Rename {
 				Regex.Replace(x.Name.Replace(",", "").Replace("-", " - "),
 					@"\d+", d => d.Value.PadLeft(8, '0'))).ToList();
 
-			kids = new List<Bitch>();
 			foreach (var kid in belly) kids.Add(new Bitch(kid, this));
 
 			goods = cute.GetFiles().ToList();
 			_total += goods.Count;
-			if (goods.Count > 0) _fam.Add(goods);
+			if (goods.Count > 0) _fam.AddRange(goods);
 		}
 	}
 }

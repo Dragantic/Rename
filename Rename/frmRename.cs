@@ -216,8 +216,7 @@ namespace Rename {
 			if (chkSubFolders.Checked)
 			{	Bitch moar = new Bitch(bitchz);
 				pbar.Maximum = moar.total;
-				fatties.Clear();
-				foreach (var hoe in moar.fam) fatties.AddRange(Bloated(hoe));   }
+				fatties = Bloated(moar.fam);   }
 			else
 			{	List<FileInfo> hoez = bitchz.GetFiles().ToList();
 				pbar.Maximum = hoez.Count;
@@ -309,7 +308,7 @@ namespace Rename {
 				{	blimp.newSize = newSize;
 					if (chkDuplicates.Checked || !blimp.isTaut)
 					{	if (chkExtChecker.Checked)
-						{	string head = getHeader(blimp);
+						{	string head = GetHeader(blimp);
 							if (blimp.extra != head)
 							{	blimp.extra = head;
 								blimp.isTrap = true;   }   }
@@ -336,18 +335,15 @@ namespace Rename {
 			return zaft;
 		}
 
-		static string getHeader(FileRename blimp) {
+		static string GetHeader(FileRename blimp) {
 			try
 			{	string full = blimp.fapth + blimp.oldSize;
-				bool matchJPG, matchPNG;
 				using (BinaryReader br = new BinaryReader(File.Open(full, FileMode.Open)))
 				{	UInt16 soi = br.ReadUInt16();  // Start of Image (SOI) marker (FFD8)
 					UInt16 marker = br.ReadUInt16(); // JFIF marker (FFE0) or EXIF marker(FF01)
-					matchJPG = (soi == 0xd8ff && (marker & 0xe0ff) == 0xe0ff);
-					matchPNG = (soi == 0x5089 && marker == 0x474e);   }
-				if (matchJPG) return ".jpg";
-				else if (matchPNG) return ".png";
-				else return blimp.extra;   }
+					if (soi == 0xd8ff && (marker & 0xe0ff) == 0xe0ff) return ".jpg";
+					else if (soi == 0x5089 && marker == 0x474e) return ".png";
+					else return blimp.extra;   }   }
 			catch { return blimp.extra; }
 		}
 
