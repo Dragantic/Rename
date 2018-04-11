@@ -9,10 +9,8 @@ namespace Rename {
 		List<FileInfo> goods;
 		List<Bitch> kids = new List<Bitch>();
 		Bitch parent;
-
-		static int _total=0;
+		static int _total = 0;
 		public int total { get { return _total; } }
-
 		static List<FileInfo> _fam = new List<FileInfo>();
 		public List<FileInfo> fam { get { return _fam; } }
 
