@@ -96,4 +96,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy Rename.exe ..\..\source\repos\Rename\Rename.exe</PostBuildEvent>
+  </PropertyGroup>
 </Project>
