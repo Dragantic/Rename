@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bitch.cs" />
-    <Compile Include="FileRename.cs" />
+    <Compile Include="Blimp.cs" />
     <Compile Include="FolderSelectDialog.cs" />
     <Compile Include="frmNames.cs">
       <SubType>Form</SubType>

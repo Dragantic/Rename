@@ -9,9 +9,8 @@ namespace Rename {
 		List<FileInfo> goods;
 		List<Bitch> kids = new List<Bitch>();
 		Bitch parent;
-		static int _total = 0;
-		public int total { get { return _total; } }
-		static List<FileInfo> _fam = new List<FileInfo>();
+
+		static List<FileInfo> _fam;
 		public List<FileInfo> fam { get { return _fam; } }
 
 		public Bitch(DirectoryInfo cute) {
@@ -23,6 +22,10 @@ namespace Rename {
 			init(cute);
 		}
 
+		public static void Burst() {
+			_fam = new List<FileInfo>();
+		}
+
 		void init(DirectoryInfo cute) {
 			face = cute;
 			var belly = cute.GetDirectories().OrderBy(x =>
@@ -32,7 +35,6 @@ namespace Rename {
 			foreach (var kid in belly) kids.Add(new Bitch(kid, this));
 
 			goods = cute.GetFiles().ToList();
-			_total += goods.Count;
 			if (goods.Count > 0) _fam.AddRange(goods);
 		}
 	}
