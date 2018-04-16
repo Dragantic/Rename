@@ -50,6 +50,8 @@
 			this.btnNames = new System.Windows.Forms.Button();
 			this.chkExtChecker = new System.Windows.Forms.CheckBox();
 			this.btnPath = new System.Windows.Forms.Button();
+			this.chkForce = new System.Windows.Forms.CheckBox();
+			this.lblForce = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// chkSubFolders
@@ -299,11 +301,33 @@
 			this.btnPath.UseVisualStyleBackColor = true;
 			this.btnPath.Click += new System.EventHandler(this.btnPath_Click);
 			// 
+			// chkForce
+			// 
+			this.chkForce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.chkForce.AutoSize = true;
+			this.chkForce.Location = new System.Drawing.Point(474, 411);
+			this.chkForce.Name = "chkForce";
+			this.chkForce.Size = new System.Drawing.Size(15, 14);
+			this.chkForce.TabIndex = 20;
+			this.chkForce.UseVisualStyleBackColor = true;
+			// 
+			// lblForce
+			// 
+			this.lblForce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblForce.AutoSize = true;
+			this.lblForce.Location = new System.Drawing.Point(464, 411);
+			this.lblForce.Name = "lblForce";
+			this.lblForce.Size = new System.Drawing.Size(10, 13);
+			this.lblForce.TabIndex = 21;
+			this.lblForce.Text = "!";
+			// 
 			// frmRename
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(584, 441);
+			this.Controls.Add(this.lblForce);
+			this.Controls.Add(this.chkForce);
 			this.Controls.Add(this.btnPath);
 			this.Controls.Add(this.chkExtChecker);
 			this.Controls.Add(this.btnNames);
@@ -360,6 +384,8 @@
         private System.Windows.Forms.Button btnNames;
 		private System.Windows.Forms.CheckBox chkExtChecker;
 		private System.Windows.Forms.Button btnPath;
+		private System.Windows.Forms.CheckBox chkForce;
+		private System.Windows.Forms.Label lblForce;
 	}
 }
 

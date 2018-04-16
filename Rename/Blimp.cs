@@ -15,9 +15,10 @@ namespace Rename {
 		static string puddinDA = @"^_*(?<title>([_-]*[\(\)a-zA-Z0-9+!])+)"
 							   + @"_*_by_(?<artist>([_-]*[\(\)a-zA-Z0-9+!])+)"
 							   + @"-(?<tag>[a-zA-Z0-9]{7})$";
-		static List<string[]> gainers;
+
+		public static List<string[]> bigs;
 		static string befr, aftr;
-		static bool fld, dup, ext;
+		static bool fld, dup, ext, frc;
 		string folds;
 
 		public DateTime   mod { get; }
@@ -28,26 +29,16 @@ namespace Rename {
         public bool   hasTwin { get; }
 		public bool    isTrap { get; }
 		public string	  sml { get; }
-
-		string _big;
-		public string big {
-			get { return _big; }
-			set
-			{	if ((isTaut = (File.Exists(fapth + value + extra))))
-				{	int groan = 0;
-					do groan++;
-					while (File.Exists(fapth + value + "("+groan+")" + extra));
-					_big = value + "("+groan+")";   }
-				else _big = value;   }
-		}
+		public string	  big { get; }
 
 		public static void Swell(string before, string after,
-			bool manual, bool folds, bool dups, bool exts) {
+			bool manual, bool folds, bool dups, bool exts, bool force) {
 			befr = before;
 			aftr = after;
 			fld = folds;
 			dup = dups;
 			ext = exts;
+			frc = force;
 			if (manual)
 			{	Regex rgx = new Regex(@"[\.+]");
 				string search = "^" + rgx.Replace(befr, @"\$&");
@@ -65,10 +56,6 @@ namespace Rename {
 			else
 			{	fillFA = new Regex(puddinFA, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 				fillDA = new Regex(puddinDA, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));   }
-		}
-
-		public static void Feed(List<string[]> fed) {
-			gainers = fed;
 		}
 
 		public Blimp (FileInfo info) {
@@ -92,9 +79,10 @@ namespace Rename {
 			{	med = "--------TIMED-OUT--------";   }
 
 			string name = (med == "BOOM") ? sml : med;
+			sml += extra;
 
-			if (gainers.Count > 0)
-			{	foreach (string[] models in gainers)
+			if (bigs.Count > 0)
+			{	foreach (string[] models in bigs)
 				{	if (isThick) break;
 					string bbw = models[models.Length - 1];
 					for (int i = 0; i < models.Length - 1; i++)
@@ -108,15 +96,30 @@ namespace Rename {
 				med = folds + name;
 				else med = folds + "_" + name;   }
 
-			if (med != "BOOM" && sml != "Rename")
-			{	if (dup || !isTaut)
-				{	sml += extra;
-					if (ext)
-					{	string head = GetHeader();
-						if (extra != head)
-						{	extra = head;
-							isTrap = true;   }   }
-					big = med;   }   }
+			string head = "";
+			if (frc)
+			{	head = GetHead();
+				if (extra != head)
+				{	extra = head;
+					isTrap = true;
+					med = name;   }   }
+
+			if (med != "BOOM")
+			{	if (ext && !frc)
+				{	head = GetHead();
+					if (extra != head)
+					{	extra = head;
+						isTrap = true;   }   }
+				if (File.Exists(fapth + med + extra))
+					isTaut = !((ext || frc) && isTrap &&
+									info.Extension.ToLower() == extra.ToLower());
+				if (dup || !isTaut)
+				{	if (isTaut)
+					{	int groan = 0;
+						do groan++;
+						while (File.Exists(fapth + med + "("+groan+")" + extra));
+						big = med + "("+groan+")" + extra;   }
+					else big = med + extra;   }   }
 		}
 
 		static string Full(Match figured) {
@@ -137,7 +140,7 @@ namespace Rename {
 			return zaft;
 		}
 
-		string GetHeader() {
+		string GetHead() {
 			try
 			{	string full = fapth + sml;
 				using (BinaryReader br = new BinaryReader(File.Open(full, FileMode.Open)))
@@ -150,7 +153,7 @@ namespace Rename {
 		}
 
 		public void Boom() {
-			try { File.Move(fapth + sml, fapth + big + extra); } catch {}
+			try { File.Move(fapth + sml, fapth + big); } catch {}
 		}
 	}
 }

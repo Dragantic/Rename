@@ -114,8 +114,8 @@ namespace Rename {
 		void Fill() {
 			Blimp.Swell(txtBefore.Text, txtAfter.Text,
 				chkSearch.Checked, chkFolderName.Checked,
-				chkDuplicates.Checked, chkExtChecker.Checked);
-			List<string[]> gainers = new List<string[]>();
+				chkDuplicates.Checked, chkExtChecker.Checked, chkForce.Checked);
+			List<string[]> pigs = new List<string[]>();
 			if (chkNameSwap.Checked && File.Exists(pimp))
 			{ using (StreamReader sr = new StreamReader(pimp))
 			  { string line;
@@ -125,8 +125,8 @@ namespace Rename {
 					{	if (Regex.IsMatch(line, "-{3,}")) begin=true;
 						continue;   }
 					string[] names = line.Split(',');
-					if (names.Length>1) gainers.Add(names);   } } }
-			Blimp.Feed(gainers);
+					if (names.Length>1) pigs.Add(names);   } } }
+			Blimp.bigs = pigs;
 
 			pbar.Value = 0;
 			btnRescan.Enabled = btnRemove.Enabled = btnRecycle.Enabled = false;
@@ -145,8 +145,7 @@ namespace Rename {
 			foreach (Blimp mate in fatties)
 			{	ListViewItem mass = new ListViewItem(mate.mod.ToString());
 				mass.SubItems.AddRange(new string[]
-				{   mate.sml, mate.big+mate.extra,
-					mate.isTaut.ToString(), mate.hasTwin.ToString()   });
+				{   mate.sml, mate.big, mate.isTaut.ToString(), mate.hasTwin.ToString()   });
 
 				if (mate.hasTwin) // has a (1) in the name
 					mass.BackColor = Color.LightSkyBlue;
@@ -164,7 +163,7 @@ namespace Rename {
 
 			if (fatties.Count > 0)
 			{	colRename.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-				colRename.Width += 10;   }
+				colRename.Width += 20;   }
 			
 			foreach (ListViewItem mass in lsvBlimps.Items)
 				mass.SubItems[1].Text += "\n" + mass.SubItems[2].Text;
@@ -207,7 +206,7 @@ namespace Rename {
 		private void btnRemove_Click(object sender, EventArgs e) {
 			foreach (ListViewItem tightClothes in lsvBlimps.SelectedItems)
 			{	fatties.Remove(fatties.Find(body =>
-					body.big+body.extra == tightClothes.SubItems[2].Text));
+					body.big == tightClothes.SubItems[2].Text));
 				lsvBlimps.Items.Remove(tightClothes);   }
 			lblMates.Text = nMates();
 			if (fatties.Count == 0) btnCommit.Enabled = false;
@@ -216,7 +215,7 @@ namespace Rename {
 		private void btnRecycle_Click(object sender, EventArgs e) {
 			foreach (ListViewItem thin in lsvBlimps.SelectedItems)
 			{	Blimp skinny = fatties.Find(body =>
-					body.big+body.extra == thin.SubItems[2].Text);
+					body.big == thin.SubItems[2].Text);
 				try
 				{	FileSystem.DeleteFile(skinny.fapth + skinny.sml,
 						UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);   }
@@ -282,7 +281,7 @@ namespace Rename {
 		private void lsvBlimps_DoubleClick(object sender, EventArgs e) {
 			if (lsvBlimps.SelectedItems.Count == 1)
 			{	Blimp pig = fatties.Find (body =>
-					body.big+body.extra == lsvBlimps.SelectedItems[0].SubItems[2].Text);
+					body.big == lsvBlimps.SelectedItems[0].SubItems[2].Text);
 				if (File.Exists(pig.fapth + pig.sml))
 					try { OpenFolderAndSelectFile(pig.fapth + pig.sml); } catch {}   }
 		}

@@ -2,9 +2,8 @@
 using ExtensionMethods;
 using System.ComponentModel;
 using System.Windows.Forms;
-using System.IO;
-using System;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace Rename {
 	public partial class frmNames : Form {
@@ -13,27 +12,17 @@ namespace Rename {
 		}
 
 		BindingList<NameSwap> bList;
-		string pimp = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
-					+ @"\Documents\.rename";
 
 		private void frmNames_Load(object sender, System.EventArgs e) {
 			Location = Settings.Default.NameLocation;
 			Size = Settings.Default.NameSize;
 			bList = new BindingList<NameSwap>();
 
-			if (File.Exists(pimp))
-			{ using (StreamReader sr = new StreamReader(pimp))
-			  { string line;
-				bool begin=false;
-				while ((line = sr.ReadLine()) != null)
-				{	if (!begin)
-					{	if (Regex.IsMatch(line, "-{3,}")) begin=true;
-						continue;   }
-					string[] names = line.Split(',');
-					string[] before = names.SubArray(0, names.Length-1);
-					if (names.Length>1) bList.Add( new NameSwap
-					{	Before = string.Join(",", before),
-						 After = names[names.Length-1]   });   } } }
+			foreach (var jugs in Blimp.bigs)
+			{	string[] before = jugs.SubArray(0, jugs.Length-1);
+				if (jugs.Length>1) bList.Add( new NameSwap
+				{	Before = string.Join(",", before),
+					 After = jugs[jugs.Length-1]   });   }
 			var src = new BindingSource(bList, null);
 			grdNames.DataSource = src;
 		}
@@ -49,15 +38,12 @@ namespace Rename {
 		}
 
 		private void btnSave_Click(object sender, System.EventArgs e) {
-			//DialogResult result = MessageBox.Show
-			//	("	    Save Changes?", "Confirm", MessageBoxButtons.OKCancel);
-			//if (result.Equals(DialogResult.OK))
-			//{	StringCollection names = new StringCollection();
-			//	foreach (NameSwap item in bList)
-			//	{	item.Before = Regex.Replace(item.Before, @"[ \t]", "");
-			//		item.After = Regex.Replace(item.After, @"[ \t]", "");
-			//		if (item.Before!=null && item.After!=null)
-			//			names.Add(item.Before + "," + item.After);   }   }
+			Blimp.bigs = new List<string[]>();
+			foreach (NameSwap item in bList)
+			{	item.Before = Regex.Replace(item.Before, @"[ \t]", "");
+				item.After = Regex.Replace(item.After, @"[ \t]", "");
+				if (item.Before!=null && item.After!=null)
+				{	Blimp.bigs.Add((item.Before + "," + item.After).Split(','));   }   }
 		}
 	}
 

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Rename {
 	class Bitch {
 		DirectoryInfo face;
-		List<FileInfo> goods;
+		List<FileInfo> lbs;
 		List<Bitch> kids = new List<Bitch>();
 		Bitch parent;
 
@@ -34,8 +34,8 @@ namespace Rename {
 
 			foreach (var kid in belly) kids.Add(new Bitch(kid, this));
 
-			goods = cute.GetFiles().ToList();
-			if (goods.Count > 0) _fam.AddRange(goods);
+			lbs = cute.GetFiles().ToList();
+			if (lbs.Count > 0) _fam.AddRange(lbs);
 		}
 	}
 }
