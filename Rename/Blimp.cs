@@ -14,7 +14,7 @@ namespace Rename {
 
 		static string puddinDA = @"^_*(?<title>([_-]*[\(\)a-zA-Z0-9+!])+)"
 							   + @"_*_by_(?<artist>([_-]*[\(\)a-zA-Z0-9+!])+)"
-							   + @"-(?<tag>[a-zA-Z0-9]{7})$";
+							   + @"-(?<tag>[a-zA-Z0-9]{7})";
 
 		public static List<string[]> bigs;
 		static string befr, aftr;
