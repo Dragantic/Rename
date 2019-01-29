@@ -52,6 +52,9 @@
 			this.btnPath = new System.Windows.Forms.Button();
 			this.chkForce = new System.Windows.Forms.CheckBox();
 			this.lblForce = new System.Windows.Forms.Label();
+			this.cxtBlimps = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.tsmOriginal = new System.Windows.Forms.ToolStripMenuItem();
+			this.cxtBlimps.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// chkSubFolders
@@ -95,6 +98,7 @@
 			this.lsvBlimps.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lsvBlimps_ColumnClick);
 			this.lsvBlimps.SelectedIndexChanged += new System.EventHandler(this.lsvBlimps_SelectedIndexChanged);
 			this.lsvBlimps.DoubleClick += new System.EventHandler(this.lsvBlimps_DoubleClick);
+			this.lsvBlimps.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lsvBlimps_MouseClick);
 			// 
 			// colDate
 			// 
@@ -321,6 +325,20 @@
 			this.lblForce.TabIndex = 21;
 			this.lblForce.Text = "!";
 			// 
+			// cxtBlimps
+			// 
+			this.cxtBlimps.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmOriginal});
+			this.cxtBlimps.Name = "cxtBlimps";
+			this.cxtBlimps.Size = new System.Drawing.Size(181, 48);
+			// 
+			// tsmOriginal
+			// 
+			this.tsmOriginal.Name = "tsmOriginal";
+			this.tsmOriginal.Size = new System.Drawing.Size(180, 22);
+			this.tsmOriginal.Text = "Show Original";
+			this.tsmOriginal.Click += new System.EventHandler(this.tsmOriginal_Click);
+			// 
 			// frmRename
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -354,6 +372,7 @@
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmRename_FormClosing);
 			this.Load += new System.EventHandler(this.frmRename_Load);
 			this.Shown += new System.EventHandler(this.frmRename_Shown);
+			this.cxtBlimps.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -386,6 +405,8 @@
 		private System.Windows.Forms.Button btnPath;
 		private System.Windows.Forms.CheckBox chkForce;
 		private System.Windows.Forms.Label lblForce;
+		private System.Windows.Forms.ContextMenuStrip cxtBlimps;
+		private System.Windows.Forms.ToolStripMenuItem tsmOriginal;
 	}
 }
 

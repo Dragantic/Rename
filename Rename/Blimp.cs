@@ -6,15 +6,15 @@ using System.Text.RegularExpressions;
 namespace Rename {
 	public class Blimp {
 
-		static Regex fillFA, fillDA;
-		static string puddinFA = @"^(?:\d{10}\..+)*(?<tag>\d{10})[\._-]"
-							   + @"(?<artist>[\.\~a-zA-Z0-9-]+)_[_-]*"
-							   + @"(?<title>([\._-]*(?!(png|jp(e)?g|gif|swf)$)"
-							   + @"([\(\)\[\]\{\}a-zA-Z0-9+%!,]|[^\x00-\x80]))+)";
+		static Regex fillFA, fillDA, bsty;
+		static string fabust = @"(?<tag>\d{10})[\._-](?<artist>[\.\~0-9A-Za-z-]+)";
+		static string puddinFA = @"^(?<pre>\d{10}\..+)*"+fabust+"_[_-]*"
+							   + @"(?<title>(?:[_-]*(?!\.(?:png|jpe?g|gif|swf)$)"
+							   + @"(?:[\.\(\)\[\]\{\}\p{L}0-9A-Za-z+%!,]|[^\x00-\x80]))+)";
 
-		static string puddinDA = @"^_*(?<title>([_-]*[\(\)a-zA-Z0-9+!])+)"
-							   + @"_*_by_(?<artist>([_-]*[\(\)a-zA-Z0-9+!])+)"
-							   + @"-(?<tag>[a-zA-Z0-9]{7})";
+		static string puddinDA = @"^(?<pre>)_*(?<title>(?:[_-]*[\(\)0-9A-Za-z+!])+)"
+							   + @"_*_by_(?<artist>(?:[_-]*[\(\)0-9A-Za-z+!])+)"
+							   + @"[_-](?<tag>[0-9A-Za-z]{7}(?![0-9A-Za-z]+)(?:-pre)?)";
 
 		public static List<string[]> bigs;
 		static string befr, aftr;
@@ -42,20 +42,21 @@ namespace Rename {
 			if (manual)
 			{	Regex rgx = new Regex(@"[\.+]");
 				string search = "^" + rgx.Replace(befr, @"\$&");
-				search = search.Replace("[artist]", @"(?<artist>[\.\~a-zA-Z0-9-]+)");
-				search = search.Replace("[title]", @"(?<title>([\._-]*(?!(png|jp(e)?g|gif|swf)$)"
-											+ @"([\(\)\[\]\{\}a-zA-Z0-9+%!,]|[^\x00-\x80]))+)");
+				search = search.Replace("[artist]", @"(?<artist>[\.\~0-9A-Za-z-]+)");
+				search = search.Replace("[title]", @"(?<title>(?:[_-]*(?!\.(?:png|jpe?g|gif|swf)$)"
+									+ @"(?:[\.\(\)\[\]\{\}\p{L}0-9A-Za-z+%!,]|[^\x00-\x80]))+)");
 				search = search.Replace("[tag]", @"(?<tag>\d{10})");
 				fillFA = new Regex(search, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 
 				search = "^" + rgx.Replace(befr, @"\$&");
-				search = search.Replace("[artist]", @"(?<artist>[a-zA-Z0-9-]+)");
-				search = search.Replace("[title]", @"(?<title>([_-]*[\(\)a-zA-Z0-9+!])+)");
-				search = search.Replace("[tag]", @"(?<tag>[a-zA-Z0-9]{7})");
+				search = search.Replace("[artist]", @"(?<artist>[0-9A-Za-z-]+)");
+				search = search.Replace("[title]", @"(?<title>(?:[_-]*[\(\)0-9A-Za-z+!])+)");
+				search = search.Replace("[tag]", @"(?<tag>(?!fullview)[0-9A-Za-z]{7}(?:-pre)?)");
 				fillDA = new Regex(search, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));   }
 			else
 			{	fillFA = new Regex(puddinFA, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 				fillDA = new Regex(puddinDA, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));   }
+			bsty = new Regex (fabust, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
 		}
 
 		public Blimp (FileInfo info) {
@@ -123,14 +124,22 @@ namespace Rename {
 		}
 
 		static string Full(Match figured) {
-			string tits = figured.Groups["tag"].ToString(),
-					gut = figured.Groups["title"].ToString(),
-				   butt = figured.Groups["artist"].ToString(),
-				   zaft = "";
+			string pre = figured.Groups["pre"].ToString(),
+				  tits = figured.Groups["tag"].ToString(),
+				   gut = figured.Groups["title"].ToString(),
+				  butt = figured.Groups["artist"].ToString(),
+				  zaft = "";
 
 			gut = Regex.Replace(gut, "_(?<ltr>(s|t|re|m))_", "'${ltr}_");
 			gut = Regex.Replace(gut, "_{2,}", "_");
 			butt = butt.Replace("_", "-");
+
+			if (pre != "")
+			{	MatchCollection jizz = bsty.Matches(pre);
+				for (int i=jizz.Count-1; i>=0; i--)
+				{	Match cum = jizz[i];
+					string also = cum.Groups["artist"].ToString();
+					butt += "_" + also;   }   }
 
 			zaft = aftr;
 			zaft = zaft.Replace("[tag]", tits);

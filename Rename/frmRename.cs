@@ -145,7 +145,7 @@ namespace Rename {
 			foreach (Blimp mate in fatties)
 			{	ListViewItem mass = new ListViewItem(mate.mod.ToString());
 				mass.SubItems.AddRange(new string[]
-				{   mate.sml, mate.big, mate.isTaut.ToString(), mate.hasTwin.ToString()   });
+				{   mate.big, mate.sml, mate.isTaut.ToString(), mate.hasTwin.ToString()   });
 
 				if (mate.hasTwin) // has a (1) in the name
 					mass.BackColor = Color.LightSkyBlue;
@@ -166,7 +166,8 @@ namespace Rename {
 				colRename.Width += 20;   }
 			
 			foreach (ListViewItem mass in lsvBlimps.Items)
-				mass.SubItems[1].Text += "\n" + mass.SubItems[2].Text;
+				mass.SubItems[1].Text = mass.SubItems[2].Text 
+							   + "\n" + mass.SubItems[1].Text;
 
 			lsvBlimps.Sorting = SortOrder.Ascending;
 			datAss = 00;
@@ -206,7 +207,7 @@ namespace Rename {
 		private void btnRemove_Click(object sender, EventArgs e) {
 			foreach (ListViewItem tightClothes in lsvBlimps.SelectedItems)
 			{	fatties.Remove(fatties.Find(body =>
-					body.big == tightClothes.SubItems[2].Text));
+					body.sml == tightClothes.SubItems[2].Text));
 				lsvBlimps.Items.Remove(tightClothes);   }
 			lblMates.Text = nMates();
 			if (fatties.Count == 0) btnCommit.Enabled = false;
@@ -215,7 +216,7 @@ namespace Rename {
 		private void btnRecycle_Click(object sender, EventArgs e) {
 			foreach (ListViewItem thin in lsvBlimps.SelectedItems)
 			{	Blimp skinny = fatties.Find(body =>
-					body.big == thin.SubItems[2].Text);
+					body.sml == thin.SubItems[2].Text);
 				try
 				{	FileSystem.DeleteFile(skinny.fapth + skinny.sml,
 						UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);   }
@@ -281,7 +282,7 @@ namespace Rename {
 		private void lsvBlimps_DoubleClick(object sender, EventArgs e) {
 			if (lsvBlimps.SelectedItems.Count == 1)
 			{	Blimp pig = fatties.Find (body =>
-					body.big == lsvBlimps.SelectedItems[0].SubItems[2].Text);
+					body.sml == lsvBlimps.SelectedItems[0].SubItems[2].Text);
 				if (File.Exists(pig.fapth + pig.sml))
 					try { OpenFolderAndSelectFile(pig.fapth + pig.sml); } catch {}   }
 		}
@@ -302,5 +303,21 @@ namespace Rename {
 
 		[DllImport("shell32.dll")]
 		private static extern void ILFree(IntPtr pidl);
+
+		private void lsvBlimps_MouseClick(object sender, MouseEventArgs e) {
+			if (e.Button == MouseButtons.Right)
+			{	if (lsvBlimps.FocusedItem.Bounds.Contains(e.Location))
+				{	cxtBlimps.Show(Cursor.Position);   }   }
+		}
+
+		private void tsmOriginal_Click(object sender, EventArgs e) {
+			if (lsvBlimps.SelectedItems.Count == 1)
+			{	Blimp pig = fatties.Find(body =>
+				   body.sml == lsvBlimps.SelectedItems[0].SubItems[2].Text);
+				string first = (pig.isTaut) ? pig.big : pig.sml;
+				first = Regex.Replace(first, @"\(\d+\)", "");
+				if (File.Exists(pig.fapth + first))
+					try { OpenFolderAndSelectFile(pig.fapth + first); } catch {}   }
+		}
 	}
 }
